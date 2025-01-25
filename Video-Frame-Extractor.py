@@ -4,6 +4,9 @@ from tqdm import tqdm
 
 def extract_frames_from_videos(input_dir, output_dir, fps):
     try:
+        if not output_dir:
+            output_dir = input_dir
+
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
 
@@ -52,7 +55,5 @@ if __name__ == "__main__":
 
     if not os.path.isdir(input_dir):
         print("Invalid input directory.")
-    elif not os.path.isdir(output_dir):
-        print("Invalid output directory.")
     else:
         extract_frames_from_videos(input_dir, output_dir, fps)
