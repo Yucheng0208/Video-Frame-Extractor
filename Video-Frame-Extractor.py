@@ -2,7 +2,7 @@ import os
 import cv2
 from tqdm import tqdm
 
-def extract_frames_from_videos(input_dir, output_dir, fps):
+def extract_frames_from_videos(input_dir, output_dir, fps, img_format):
     try:
         if not output_dir:
             output_dir = input_dir
@@ -36,7 +36,7 @@ def extract_frames_from_videos(input_dir, output_dir, fps):
                         break
 
                     if frame_count % frame_interval == 0:
-                        frame_filename = os.path.join(video_output_dir, f"frame_{extracted_count:04d}.png")
+                        frame_filename = os.path.join(video_output_dir, f"frame_{extracted_count:04d}.{img_format}")
                         cv2.imwrite(frame_filename, frame)
                         extracted_count += 1
 
@@ -52,8 +52,16 @@ if __name__ == "__main__":
     input_dir = input("Enter the input directory containing videos: ").strip()
     output_dir = input("Enter the output directory for extracted frames: ").strip()
     fps = int(input("Enter the desired frames per second (FPS): ").strip())
-
+    
+    format_options = {"1": "jpg", "2": "jpeg", "3": "png", "4": "tif"}
+    print("Select the output image format:")
+    for key, value in format_options.items():
+        print(f"{key}: {value}")
+    
+    format_choice = input("Enter the format number: ").strip()
+    img_format = format_options.get(format_choice, "png")  # 預設為 png
+    
     if not os.path.isdir(input_dir):
         print("Invalid input directory.")
     else:
-        extract_frames_from_videos(input_dir, output_dir, fps)
+        extract_frames_from_videos(input_dir, output_dir, fps, img_format)
