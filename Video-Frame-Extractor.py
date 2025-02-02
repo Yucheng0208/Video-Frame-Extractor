@@ -1,5 +1,6 @@
 import os
 import cv2
+import argparse
 from tqdm import tqdm
 
 def extract_frames_from_videos(input_dir, output_dir, fps, img_format):
@@ -49,19 +50,30 @@ def extract_frames_from_videos(input_dir, output_dir, fps, img_format):
         print(f"Failed to extract frames: {e}")
 
 if __name__ == "__main__":
-    input_dir = input("Enter the input directory containing videos: ").strip()
-    output_dir = input("Enter the output directory for extracted frames: ").strip()
-    fps = int(input("Enter the desired frames per second (FPS): ").strip())
+    parser = argparse.ArgumentParser(description="Extract frames from videos.")
+    parser.add_argument("--input_dir", type=str, required=False, help="Input directory containing videos.")
+    parser.add_argument("--output_dir", type=str, required=False, help="Output directory for extracted frames.")
+    parser.add_argument("--fps", type=int, required=False, help="Desired frames per second (FPS).")
+    parser.add_argument("--img_format", type=str, choices=["jpg", "jpeg", "png", "tif"], required=False, help="Output image format.")
     
-    format_options = {"1": "jpg", "2": "jpeg", "3": "png", "4": "tif"}
-    print("Select the output image format:")
-    for key, value in format_options.items():
-        print(f"{key}: {value}")
+    args = parser.parse_args()
     
-    format_choice = input("Enter the format number: ").strip()
-    img_format = format_options.get(format_choice, "png")  # 預設為 png
-    
-    if not os.path.isdir(input_dir):
-        print("Invalid input directory.")
+    if args.input_dir and args.output_dir and args.fps and args.img_format:
+        extract_frames_from_videos(args.input_dir, args.output_dir, args.fps, args.img_format)
     else:
-        extract_frames_from_videos(input_dir, output_dir, fps, img_format)
+        input_dir = input("Enter the input directory containing videos: ").strip()
+        output_dir = input("Enter the output directory for extracted frames: ").strip()
+        fps = int(input("Enter the desired frames per second (FPS): ").strip())
+        
+        format_options = {"1": "jpg", "2": "jpeg", "3": "png", "4": "tif"}
+        print("Select the output image format:")
+        for key, value in format_options.items():
+            print(f"{key}: {value}")
+        
+        format_choice = input("Enter the format number: ").strip()
+        img_format = format_options.get(format_choice, "png")  # 預設為 png
+        
+        if not os.path.isdir(input_dir):
+            print("Invalid input directory.")
+        else:
+            extract_frames_from_videos(input_dir, output_dir, fps, img_format)
